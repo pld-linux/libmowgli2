@@ -1,14 +1,19 @@
+#
+# Conditional build:
+%bcond_without	static_libs	# static library
+#
 Summary:	Development framework for C (like GLib)
 Summary(pl.UTF-8):	Szkielet programistyczny dla C (podobny do GLiba)
-Name:		libmowgli
-Version:	1.0.0
-Release:	2
-License:	BSD
+Name:		libmowgli2
+Version:	2.0.0
+Release:	1
+License:	MIT
 Group:		Libraries
-# note: dead URL, untagged code available in https://github.com/atheme/libmowgli
-Source0:	http://distfiles.atheme.org/%{name}-%{version}.tar.bz2
-# Source0-md5:	e5f99410cb7b161f322b6bccd4b05dbe
-URL:		http://atheme.org/projects/libmowgli.html
+Source0:	https://github.com/atheme/libmowgli-2/archive/libmowgli-%{version}.tar.gz
+# Source0-md5:	0b8cf8b66d745d40f186e3cbd22fdc0e
+URL:		https://github.com/atheme/libmowgli-2/
+BuildRequires:	openssl-devel
+BuildRequires:	sed >= 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -41,11 +46,26 @@ Header files for libmowgli.
 %description devel -l pl.UTF-8
 Pliki nagłówkowe libmowgli.
 
+%package static
+Summary:	Static libmowgli library
+Summary(pl.UTF-8):	Biblioteka statyczna libmowgli
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description static
+Static libmowgli library.
+
+%description static -l pl.UTF-8
+Biblioteka statyczna libmowgli.
+
 %prep
-%setup -q
+%setup -q -n libmowgli-2-libmowgli-%{version}
+
+%{__sed} -i -e '/^\.SILENT/d' buildsys.mk.in
 
 %build
-%configure
+%configure \
+	%{?with_static_libs:--enable-static}
 %{__make}
 
 %install
@@ -62,12 +82,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS README
-%attr(755,root,root) %{_libdir}/libmowgli.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmowgli.so.2
+%doc AUTHORS COPYING README
+%attr(755,root,root) %{_libdir}/libmowgli-2.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmowgli-2.so.0
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libmowgli.so
-%{_includedir}/libmowgli
-%{_pkgconfigdir}/libmowgli.pc
+%doc doc/{BOOST,design-concepts.txt}
+%attr(755,root,root) %{_libdir}/libmowgli-2.so
+%{_includedir}/libmowgli-2
+%{_pkgconfigdir}/libmowgli-2.pc
+
+%if %{with static_libs}
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libmowgli-2.a
+%endif

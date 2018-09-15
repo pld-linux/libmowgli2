@@ -6,7 +6,7 @@ Summary:	Development framework for C (like GLib)
 Summary(pl.UTF-8):	Szkielet programistyczny dla C (podobny do GLiba)
 Name:		libmowgli2
 Version:	2.0.0
-Release:	2
+Release:	3
 License:	MIT
 Group:		Libraries
 Source0:	https://github.com/atheme/libmowgli-2/archive/libmowgli-%{version}.tar.gz

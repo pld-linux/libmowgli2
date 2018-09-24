@@ -6,11 +6,12 @@ Summary:	Development framework for C (like GLib)
 Summary(pl.UTF-8):	Szkielet programistyczny dla C (podobny do GLiba)
 Name:		libmowgli2
 Version:	2.0.0
-Release:	3
+Release:	4
 License:	MIT
 Group:		Libraries
 Source0:	https://github.com/atheme/libmowgli-2/archive/libmowgli-%{version}.tar.gz
 # Source0-md5:	0b8cf8b66d745d40f186e3cbd22fdc0e
+Patch0:		%{name}-openssl-1.1.patch
 URL:		https://github.com/atheme/libmowgli-2/
 BuildRequires:	openssl-devel
 BuildRequires:	sed >= 4.0
@@ -60,6 +61,7 @@ Biblioteka statyczna libmowgli.
 
 %prep
 %setup -q -n libmowgli-2-libmowgli-%{version}
+%patch0 -p1
 
 %{__sed} -i -e '/^\.SILENT/d' buildsys.mk.in
 
